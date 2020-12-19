@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Base Conversion</title>
+	<style>
+		.box{
+			width: 600px;
+			height: 500px;
+			border: 2px solid #000;
+			margin: 0px auto;
+		}
+		h1{
+			text-align: center;
+			padding: 10px;
+		}
+		.menu>div{
+			width: 50%;
+			float: left;
+			text-align: center;
+		}
+		.input_area{
+			width: 100%;
+			float: left;
+			text-align: center;
+			margin-top: 20px;
+		}
+		h3,h4{
+			margin: 0px;
+		}
+	</style>
+</head>
+<body>
+	
+
+	<div class="box">
+
+		<h1>Number's Base Conversion</h1>
+
+		<div class="menu">
+
+
+			<div class="from">
+			    <label for="from">From</label>
+			    <select id="from">
+				   <option value=""></option>
+				   <option value="decimal">Decimal</option>
+				   <option value="binary">Binary</option>
+				   <option value="hexadecimal">Hexadecimal</option>
+			    </select>
+			</div>
+
+			<div class="to">
+			    <label for="to">To</label>
+			    <select id="to">
+				   <option value=""></option>
+				   <option value="binary">Binary</option>
+				   <option value="decimal">Decimal</option>
+				   <option value="hexadecimal">Hexadecimal</option>
+			    </select>
+			</div>
+
+		</div>
+		<div class="input_area">
+
+			<label for="input-box">Enter Your Number</label> <br>
+
+			<input type="text" id="input-box" > <br><br>
+
+			<button id="convert">Convert</button>
+
+			<button id="reset">Reset</button>
+
+		</div>
+		<div class="input_area">
+			<h3>Result: <span id="result-show"></span></h3>
+		</div>
+	</div>
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- our script -->
+<script>
+
+	// jquery start 
+	$(document).ready(function(){
+
+		// reset button start
+		$("#reset").click(function(){
+			reset_page();
+		}) 
+		// reset button end
+			
+		$("#convert").click(function(){
+
+			var input_val = $("#input-box").val();
+			
+			var from = $("#from").val();
+			var to   = $("#to").val();
+
+
+			if(from == 'decimal' && to == 'binary'){
+
+				convert_dec_to_bin(input_val);
+
+			}else if(from == 'decimal' && to == 'hexadecimal'){
+
+				convert_dec_to_hex(input_val);
+
+			}else if(from == 'binary' && to == 'decimal'){
+
+				convert_bin_to_dec(input_val);
+
+			}else if(from == 'binary' && to == 'hexadecimal'){
+
+				convert_bin_to_hex(input_val);
+
+			}else if(from == 'hexadecimal' && to == 'decimal'){
+
+				convert_hex_to_dec(input_val);
+
+			}else if(from == 'hexadecimal' && to == 'binary'){
+
+				convert_hex_to_bin(input_val);
+
+			}else{
+				alert("Same Base");
+			}
+
+		}) // end click
+
+	}) // end jquery
+
+
+
+
+	function convert_dec_to_bin(input_val){
+
+		num = Number(input_val);
+
+		var ans = '';
+
+		var rem = 0;
+
+		
+		while(num > 0){
+
+			rem 	  = num % 2; 
+
+			num 	  = parseInt(num / 2); 
+
+			ans       = rem + ans; 
+		}
+
+		$("#result-show").html(ans);
+
+	}
+
+
+
+
+	function convert_dec_to_hex(input_val){
+
+
+		input_val = Number(input_val);
+		
+		var num,fraction,full_result,only_int;
+
+		var ans = '';
+	
+		while(input_val > 0){
+
+			full_result = input_val / 16;
+
+			only_int = parseInt(full_result);
+
+			fraction = (full_result - only_int);
+
+			input_val = only_int;
+
+			num = (fraction * 16);
+			
+			if(num == 10){
+				ans = 'A'+ans;
+			}else if(num == 11){
+				ans = 'B'+ans;
+			}else if(num == 12){
+				ans = 'C'+ans;
+			}else if(num == 13){
+				ans = 'D'+ans;
+			}else if(num == 14){
+				ans = 'E'+ans;
+			}else if(num == 15){
+				ans = 'F'+ans;
+			}else{
+				ans = num+ans;
+			}
+		} //end while
+
+
+		$("#result-show").html(ans);
+		return ans;
+	} //end function
+
+
+
+	function convert_bin_to_dec(input_val){
+
+		input_val = input_val.toString();
+
+		var ans = 0;
+
+		var len = input_val.length;
+
+		var p = 0;
+
+		for(var i = len-1; i>=0; i--){
+
+			var num = Number(input_val[i]);
+
+			if(num > 1){
+				alert("This is not binary number");
+				reset_page();
+				return;
+			}
+
+			ans = ans + ( num * Math.pow(2,p) );
+			p++;
+
+		}
+
+		$("#result-show").html(ans);
+		return ans;
+	}
+
+
+
+	function convert_bin_to_hex(input_val){
+
+		var decemal_val = convert_bin_to_dec(input_val);
+		convert_dec_to_hex(decemal_val);
+
+	}
+
+	function convert_hex_to_dec(input_val){
+		
+		var ans = 0,num,char;
+
+		var len = input_val.length;
+		var p = 0;
+
+		for(var i = len-1; i>=0; i--){
+
+			char = input_val[i];
+
+			if(char == 'A'){
+				num = 10;
+			}else if(char == 'B'){
+				num = 11;
+			}else if(char == 'C'){
+				num = 12;
+			}else if(char == 'D'){
+				num = 13;
+			}else if(char == 'E'){
+				num = 14;
+			}else if(char == 'F'){
+				num = 15;
+			}else{
+				num = Number(char);
+			}
+
+			ans = ans + ( num * Math.pow(16,p) );
+			
+			p++;
+		}
+
+
+		$("#result-show").html(ans);
+		return ans;
+	}
+
+	function convert_hex_to_bin(input_val){
+		var decemal = convert_hex_to_dec(input_val);
+		convert_dec_to_bin(decemal);
+	}
+
+
+	function reset_page(){
+
+		$('#from option:eq(0)').prop('selected', true)
+		$('#to option:eq(0)').prop('selected', true)
+
+
+		$("#result-show").html("");
+		
+		$("#input-box").val('');
+	}
+
+
+</script>
+
+
+
+</body>
+</html>
